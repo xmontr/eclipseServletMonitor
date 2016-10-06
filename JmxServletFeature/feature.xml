@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="JmxServletFeature"
+      label="JmxServletFeature"
+      version="1.0.0.qualifier"
+      provider-name="Montrichard">
+
+   <description url="http://www.example.com/description">
+      this feature enable to create a new project of type jmxServletProject.
+it contains a xml file config.xml thatthat is graphically editable
+with jmxServlet editor. The j2eemonitor.war is automatically
+created.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="JmxServletEditor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="RemoteJmxConnection"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

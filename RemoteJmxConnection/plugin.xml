@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="remoteJmxConnection"
+         name="remote JMX connection"
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="RemoteJmxConnection.category"
+            class="remotejmxconnection.wizard.NewJmxConnectionWizard"
+            finalPerspective="org.eclipse.ui.resourcePerspective"
+            hasPages="true"
+            icon="icons/Network-Wifi-icon.gif"
+            id="RemoteJmxConnection.newConnectionWizard"
+            name="Jmx remote Connection">
+      </wizard>
+      <category
+            id="RemoteJmxConnection.category"
+            name="Jmx Remote">
+      </category>
+   </extension>
+   <extension
+         id="jmxremoteview"
+         name="jmxremote view"
+         point="org.eclipse.ui.views">
+      <category
+            id="RemoteJmxConnection.category1"
+            name="Jmx Servlet">
+      </category>
+      <view
+            category="RemoteJmxConnection.category1"
+            class="remotejmxconnection.view.RjmxConnectionView"
+            id="RemoteJmxConnection.view1"
+            name="Remote Jmx Connection"
+            restorable="true">
+      </view>
+   </extension>
+    <!--menu:org.eclipse.ui.main.menu?after=additions    toolbar:remotejmxconnection.view.RjmxConnectionView?after=additions -->
+   <extension
+         point="org.eclipse.ui.menus">
+   </extension>
+   <extension
+         id="allcommands.id"
+         name="all commands for remotejmx"
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="remotejmxconnection.handler.RemoveConnectionHandler"
+            id="RemoteJmxConnection.command1"
+            name="remove connection">
+      </command>
+      <command
+            defaultHandler="remotejmxconnection.handler.NewConnectionHandler"
+            id="RemoteJmxConnection.newcommand"
+            name="New Jmx Remote Connection">
+      </command>
+   </extension>
+
+</plugin>
