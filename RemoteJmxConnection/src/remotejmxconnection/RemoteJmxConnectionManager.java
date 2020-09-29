@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class RemoteJmxConnectionManager {
 
 
 	private static final String TAG_HOST = "host";
+	final String TAG_USER = "user";
+	final String TAG_PASSWORD = "password";
 
 
 	private static final String TAG_CONNECTION = "connection";
@@ -162,6 +165,8 @@ public class RemoteJmxConnectionManager {
 		for (RemoteJmxConnectionBean remoteJmxConnectionBean : connections) {
 			IMemento child = memento.createChild(TAG_CONNECTION);
 			child.putString(TAG_HOST, remoteJmxConnectionBean.getHost());
+			child.putString(TAG_USER, remoteJmxConnectionBean.getUser());
+			child.putString(TAG_PASSWORD, remoteJmxConnectionBean.getPassword());
 			child.putInteger(TAG_PORT, remoteJmxConnectionBean.getPort());
 			child.putString(TAG_TYPE,remoteJmxConnectionBean.getType().name() );
 			
@@ -197,6 +202,8 @@ public class RemoteJmxConnectionManager {
 		for (IMemento iMemento : connect) {
 			RemoteJmxConnectionBean newconn = new RemoteJmxConnectionBean();
 			newconn.setHost(iMemento.getString(TAG_HOST));
+			newconn.setUser(iMemento.getString(TAG_USER));
+			newconn.setPassword(iMemento.getString(TAG_PASSWORD));
 			newconn.setPort(iMemento.getInteger(TAG_PORT));
 			newconn.setType(   RemoteConnectiontype.valueOf(     iMemento.getString(TAG_TYPE)));
 			connections.add(newconn);
@@ -218,7 +225,14 @@ public class RemoteJmxConnectionManager {
 	
 		if(theconn.getActiveConnection()== null){		
 			
-			JMXServiceURL serviceurl;JMXConnector connector;MBeanServerConnection activeConnection;
+			JMXServiceURL serviceurl;
+			JMXConnector connector;
+			MBeanServerConnection activeConnection;
+			HashMap env = new HashMap();
+			   String[] credentials = new String[] { theconn.getUser() , theconn.getPassword() }; 
+			      env.put("jmx.remote.credentials", credentials);
+			
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append("service:jmx:rmi:///jndi/rmi://");
 			sb.append(theconn.getHost());
@@ -227,7 +241,7 @@ public class RemoteJmxConnectionManager {
 			sb.append("/jmxrmi");
 			 try {
 				serviceurl = new JMXServiceURL(sb.toString());
-				 connector = JMXConnectorFactory.connect(serviceurl);
+				 connector = JMXConnectorFactory.connect(serviceurl,env);
 				 activeConnection = connector.getMBeanServerConnection();
 					theconn.setConnector(connector);
 					 

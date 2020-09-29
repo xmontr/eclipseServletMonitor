@@ -36,6 +36,8 @@ public class JmxConnectionForm extends Composite {
 	
 	private IChangeListener changelistener;
 	private AggregateValidationStatus aggregateValidationStatus;
+	private Text userInput;
+	private Text passwordInput;
 
 	public JmxConnectionForm(Composite parent, int style) {
 		super(parent, style);
@@ -88,6 +90,34 @@ public class JmxConnectionForm extends Composite {
 		fd_typeInput.right = new FormAttachment(100, -152);
 		fd_typeInput.left = new FormAttachment(lblType, 20);
 		typeInput.setLayoutData(fd_typeInput);
+		
+		userInput = new Text(this, SWT.BORDER);
+		FormData fd_userInput = new FormData();
+		fd_userInput.left = new FormAttachment(hostInput, 0, SWT.LEFT);
+		fd_userInput.top = new FormAttachment(typeInput, 6);
+		fd_userInput.right = new FormAttachment(100, -152);
+		userInput.setLayoutData(fd_userInput);
+		
+		Label lblUser = new Label(this, SWT.NONE);
+		FormData fd_lblUser = new FormData();
+		fd_lblUser.bottom = new FormAttachment(userInput, 0, SWT.BOTTOM);
+		fd_lblUser.right = new FormAttachment(userInput, -17);
+		lblUser.setLayoutData(fd_lblUser);
+		lblUser.setText("user");
+		
+		Label lblPassword = new Label(this, SWT.NONE);
+		FormData fd_lblPassword = new FormData();
+		fd_lblPassword.top = new FormAttachment(lblUser, 17);
+		fd_lblPassword.right = new FormAttachment(lblHost, 0, SWT.RIGHT);
+		lblPassword.setLayoutData(fd_lblPassword);
+		lblPassword.setText("password");
+		
+		passwordInput = new Text(this, SWT.BORDER);
+		FormData fd_passwordInput = new FormData();
+		fd_passwordInput.right = new FormAttachment(hostInput, 181);
+		fd_passwordInput.bottom = new FormAttachment(lblPassword, 0, SWT.BOTTOM);
+		fd_passwordInput.left = new FormAttachment(hostInput, 0, SWT.LEFT);
+		passwordInput.setLayoutData(fd_passwordInput);
 		buildCombType();
 		m_bindingContext = initDataBindings();
 		
@@ -124,17 +154,10 @@ public class JmxConnectionForm extends Composite {
 		IObservableValue observeTextHostInputObserveWidget = WidgetProperties.text(SWT.Modify).observe(hostInput);
 		IObservableValue hostModelObserveValue = PojoProperties.value("host").observe(model);
 		UpdateValueStrategy hostTarget2modelStrategy = new UpdateValueStrategy();
-		UpdateValueStrategy hostModel2targetStartegy= new UpdateValueStrategy();
-		
-		IValidator validator =new NonEmptyStringFieldValidator("host");
-		hostTarget2modelStrategy.setAfterGetValidator(validator );
-		
-	Binding hostbbv = bindingContext.bindValue(observeTextHostInputObserveWidget, hostModelObserveValue, hostTarget2modelStrategy, hostModel2targetStartegy);
-	ControlDecorationSupport.create(hostbbv, SWT.TOP | SWT.LEFT);
-	
-	
-	
-	
+		IValidator validator = new NonEmptyStringFieldValidator("host");
+		hostTarget2modelStrategy.setAfterGetValidator(validator);
+		UpdateValueStrategy hostModel2targetStartegy = new UpdateValueStrategy();
+		Binding hostbbv = bindingContext.bindValue(observeTextHostInputObserveWidget, hostModelObserveValue, hostTarget2modelStrategy, hostModel2targetStartegy);
 		//
 		IObservableValue observeTextPortInputObserveWidget = WidgetProperties.text(SWT.Modify).observe(portInput);
 		IObservableValue portModelObserveValue = PojoProperties.value("port").observe(model);
@@ -143,16 +166,22 @@ public class JmxConnectionForm extends Composite {
 		IObservableValue observeTextTypeInputObserveWidget = WidgetProperties.selection().observe(typeInput);
 		IObservableValue typeModelObserveValue = PojoProperties.value("type").observe(model);
 		UpdateValueStrategy typetarget2model = new UpdateValueStrategy();
-		IConverter cv1= new ConnectionTypeConvertor(RemoteConnectiontype.class, String.class);
-		IConverter cv2= new ConnectionTypeConvertor(String.class,RemoteConnectiontype.class );
+		IConverter cv2 = new ConnectionTypeConvertor(String.class,RemoteConnectiontype.class );
 		typetarget2model.setConverter(cv2);
-		IValidator validator2 =new NonEmptyStringFieldValidator("Type of connection");
-		typetarget2model.setAfterGetValidator(validator2 );
-		
-		UpdateValueStrategy typemodel2target=new  UpdateValueStrategy();
+		IValidator validator2 = new NonEmptyStringFieldValidator("Type of connection");
+		typetarget2model.setAfterGetValidator(validator2);
+		UpdateValueStrategy typemodel2target = new UpdateValueStrategy();
+		IConverter cv1 = new ConnectionTypeConvertor(RemoteConnectiontype.class, String.class);
 		typemodel2target.setConverter(cv1);
 		Binding typebindingvalue = bindingContext.bindValue(observeTextTypeInputObserveWidget, typeModelObserveValue, typetarget2model, typemodel2target);
-		ControlDecorationSupport.create(typebindingvalue, SWT.TOP | SWT.LEFT);
+		//
+		IObservableValue observeTextUserInputObserveWidget = WidgetProperties.text(SWT.Modify).observe(userInput);
+		IObservableValue userModelObserveValue = PojoProperties.value("user").observe(model);
+		bindingContext.bindValue(observeTextUserInputObserveWidget, userModelObserveValue, null, null);
+		//
+		IObservableValue observeTextPasswordInputObserveWidget = WidgetProperties.text(SWT.Modify).observe(passwordInput);
+		IObservableValue passwordModelObserveValue = PojoProperties.value("password").observe(model);
+		bindingContext.bindValue(observeTextPasswordInputObserveWidget, passwordModelObserveValue, null, null);
 		//
 		return bindingContext;
 	}
